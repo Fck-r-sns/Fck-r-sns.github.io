@@ -32,7 +32,7 @@ github_username:  Fck-r-sns
 # Build settings
 theme: minima
 minima:
-  - skin: dark
+  skin: dark
 plugins:
   - jekyll-feed
 
