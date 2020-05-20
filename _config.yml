@@ -21,7 +21,7 @@
 title: Binary machinery
 author_name: Evgeniy Prikhodko
 email: fck.r.sns@gmail.com
-description: A personal web-site / portfolio / blog about game development
+description: A personal website / portfolio / blog about game development
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  Fck-r-sns
@@ -30,10 +30,20 @@ jekyll_url: https://www.twitter.com/jekyllrb
 theme_name: midnight
 theme_url: https://github.com/pages-themes/midnight
 
+style:
+    date_format: "%b %-d, %Y"
+
 # Build settings
 theme: jekyll-theme-midnight
 plugins:
   - jekyll-feed
+  - jekyll-seo-tag
+
+defaults:
+  - scope:
+      path: "assets/img"
+    values:
+      image: true
 
 # Exclude from processing.
 # The following items will not be processed, by default.
