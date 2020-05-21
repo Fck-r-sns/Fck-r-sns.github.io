@@ -24,9 +24,11 @@ email: fck.r.sns@gmail.com
 description: A personal website / portfolio / blog about game development
 
 social:
+    github: https://github.com/Fck-r-sns
     linkedin: https://www.linkedin.com/in/evgeniyprikhodko/
+    telegram: https://t.me/fck_r_sns
 
-jekyll_url: https://www.twitter.com/jekyllrb
+jekyll_url: https://github.com/jekyll/jekyll
 theme_name: midnight
 theme_url: https://github.com/pages-themes/midnight
 

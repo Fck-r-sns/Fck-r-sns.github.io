@@ -9,7 +9,7 @@ excerpt: How to inject mods into a Unity game using some tech tricks like game a
 ---
 There are not so many video games with built in mods support, but we constantly see news about modders making mods for all kinds of video games. In most cases it’s about asset manipulation like [models, textures or sometimes sounds replacement](https://youtu.be/6wY1FnQ9ygg). However, some mods offer new game mechanics, which means there are code changes involved.
 
-I’ve spent a lot of time playing Beat Saber both without and with mods. One day I got a couple of ideas about features which would be cool to add in the game so I started learning how mods are made. Beat Saber is powered by the Unity game engine and there are some open-source solutions for mods injection available on the internet. I’ve thoroughly examined the source code of existing mods and mods injectors and this article is about what I’ve learned there. It includes some tech tricks like game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
+I’ve spent a lot of time playing Beat Saber both without and with mods. One day I got a couple of ideas about features which would be cool to add in the game so I started learning how mods are made. I’ve thoroughly examined the source code of existing mods and mods injectors and this article is about what I’ve learned there. It includes some tech tricks like game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
 
 ![]({{page.images_folder}}/title_image.png)
 *Image sources: [1](https://www.oculus.com/experiences/quest/2448060205267927/), [2](https://youtu.be/OH4txDD23_c)*
