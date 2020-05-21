@@ -22,9 +22,9 @@ title: Binary machinery
 author_name: Evgeniy Prikhodko
 email: fck.r.sns@gmail.com
 description: A personal website / portfolio / blog about game development
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  Fck-r-sns
+
+social:
+    linkedin: https://www.linkedin.com/in/evgeniyprikhodko/
 
 jekyll_url: https://www.twitter.com/jekyllrb
 theme_name: midnight
@@ -36,8 +36,6 @@ style:
 # Build settings
 theme: jekyll-theme-midnight
 plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
 
 defaults:
   - scope:
