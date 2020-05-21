@@ -26,7 +26,9 @@ description: A personal website / portfolio / blog about game development
 social:
     github: https://github.com/Fck-r-sns
     linkedin: https://www.linkedin.com/in/evgeniyprikhodko/
-    telegram: https://t.me/fck_r_sns
+    email: fck.r.sns@gmail.com
+    telegram: "@fck_r_sns"
+    discord: Jhon (Fck_r_sns)#6909
 
 jekyll_url: https://github.com/jekyll/jekyll
 theme_name: midnight
