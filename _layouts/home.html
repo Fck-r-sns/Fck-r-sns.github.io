@@ -3,57 +3,36 @@ layout: default
 ---
 
 <div class="home">
-  {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
-  {%- endif -%}
 
-  {{ content }}
-
-
-  {% if site.paginate %}
-    {% assign posts = paginator.posts %}
-  {% else %}
-    {% assign posts = site.posts %}
-  {% endif %}
-
+  {% assign posts = site.posts %}
 
   {%- if posts.size > 0 -%}
     {%- if page.list_title -%}
-      <h2 class="post-list-heading">{{ page.list_title }}</h2>
+      <h2>{{ page.list_title }}</h2>
     {%- endif -%}
-    <ul class="post-list">
-      {%- for post in posts -%}
-      <li>
-        <span class="post-meta">{{ post.date | date: site.style.date_format }}</span>
-        <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
-          </a>
-        </h3>
-        {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
-        {%- endif -%}
-      </li>
-      {%- endfor -%}
-    </ul>
 
-    {% if site.paginate %}
-      <div class="pager">
-        <ul class="pagination">
-        {%- if paginator.previous_page %}
-          <li><a href="{{ paginator.previous_page_path | relative_url }}" class="previous-page">{{ paginator.previous_page }}</a></li>
-        {%- else %}
-          <li><div class="pager-edge">•</div></li>
-        {%- endif %}
-          <li><div class="current-page">{{ paginator.page }}</div></li>
-        {%- if paginator.next_page %}
-          <li><a href="{{ paginator.next_page_path | relative_url }}" class="next-page">{{ paginator.next_page }}</a></li>
-        {%- else %}
-          <li><div class="pager-edge">•</div></li>
-        {%- endif %}
-        </ul>
+    <div>
+      {%- for post in posts -%}
+
+      <div class="post">
+
+        <div>{{ post.date | date: site.style.date_format }}</div>
+
+        <h1>
+          <a href="{{ post.url | relative_url }}">
+            <div>{{ post.title | escape }}</div>
+            <div>{{ post.subtitle | escape }}</div>
+          </a>
+        </h1>
+
+        <p>{{ post.excerpt | escape }}</p>
+
+        <p><img src="{{post.title_image}}" width="580"></p>
+
       </div>
-    {%- endif %}
+
+      {%- endfor -%}
+    </div>
 
   {%- endif -%}
 

@@ -1,14 +1,17 @@
 ---
 layout: post
-title: "How mods are made for Unity games. Chapter 1: Inject mods into a game’s code"
+title: "How mods are made for Unity games"
+subtitle: "Chapter 1: Inject mods into a game’s code"
+title_image: "/assets/img/2020-05-21-mods-1/title_image.png"
 date: 2020-05-21 16:00:00 +0300
-images: "/assets/img/2020-05-21-mods-1"
+images_folder: "/assets/img/2020-05-21-mods-1"
+excerpt: How to inject mods into a Unity game using some tech tricks like game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
 ---
 There are not so many video games with built in mods support, but we constantly see news about modders making mods for all kinds of video games. In most cases it’s about asset manipulation like [models, textures or sometimes sounds replacement](https://youtu.be/6wY1FnQ9ygg). However, some mods offer new game mechanics, which means there are code changes involved.
 
 I’ve spent a lot of time playing Beat Saber both without and with mods. One day I got a couple of ideas about features which would be cool to add in the game so I started learning how mods are made. Beat Saber is powered by the Unity game engine and there are some open-source solutions for mods injection available on the internet. I’ve thoroughly examined the source code of existing mods and mods injectors and this article is about what I’ve learned there. It includes some tech tricks like game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
 
-![]({{page.images}}/title_image.png)
+![]({{page.images_folder}}/title_image.png)
 *Image sources: [1](https://www.oculus.com/experiences/quest/2448060205267927/), [2](https://youtu.be/OH4txDD23_c)*
 
 ## About Beat Saber
@@ -36,7 +39,7 @@ Mono is one of the Common Language Infrastructure (CLI) implementations. It’s 
 
 This is a common way of game development when high-performance part of an engine is written in C or C++ and game logic is written in a high level scripting language (e.g. Lua). The advantage of C# as a scripting language is that it is “high-level” enough to make development simpler and faster, but it also allows to use [JIT-compilation](https://en.wikipedia.org/wiki/Just-in-time_compilation) into native code.
 
-![]({{page.images}}/mono_architecture.png)
+![]({{page.images_folder}}/mono_architecture.png)
 
 You can read more about this in the [Mono documentation](https://www.mono-project.com/docs/advanced/embedding/scripting/).
 
@@ -44,7 +47,7 @@ Software game mods (also known as plugins) are dll files (.NET assemblies in cas
 
 ## BSIPA
 
-![]({{page.images}}/bsipa_logo.png)
+![]({{page.images_folder}}/bsipa_logo.png)
 
 BSIPA (Beat Saber Illusion Plugin Architecture) is a set of libraries to modify Beat Saber files to make it able to load and run custom mods. BSIPA is written in C# ([source code](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded)) and it is a fork of IPA ([source code](https://github.com/Eusth/IPA)). This means modders used existing plugin injector IPA and modified it to better fit Beat Saber (and add some game agnostic general improvements). There are three main modules in the source code: IPA, IPA.Loader and IPA.Injector. Actually there are more of them, but these three are the most important.
 
@@ -207,7 +210,7 @@ If we used the original IPA we could stop right now, this would be enough. IPA.e
 
 ## Unity Doorstop
 
-![]({{page.images}}/doorstop_logo.png)
+![]({{page.images_folder}}/doorstop_logo.png)
 
 A library called UnityDoorstop-BSIPA is responsible for the actual injection and it’s a part of BSIPA package. It’s written in pure C ([source code](https://github.com/nike4613/UnityDoorstop-BSIPA)) and it’s a fork as well, original project can be found here: [source code](https://github.com/NeighTools/UnityDoorstop). Doorstop’s motto is “Run managed code before Unity does!”. Managed code in our case is the C# part of Unity and game scripts. The motto means that Doorstop can somehow inject our custom code after the C++ core is loaded but before C# scripts are.
 
