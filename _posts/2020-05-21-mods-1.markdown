@@ -6,7 +6,7 @@ page_subtitle: "Chapter 1: Inject mods into a game’s code"
 title_image: "/assets/img/2020-05-21-mods-1/title_image.png"
 date: 2020-05-21 16:00:00 +0300
 images_folder: "/assets/img/2020-05-21-mods-1"
-excerpt: How to inject mods into a Unity game using some tech tricks like game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
+excerpt: How to inject mods into a Unity game using some tech tricks including game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
 ---
 There are not so many video games with built in mods support, but we constantly see news about modders making mods for all kinds of video games. In most cases it’s about asset manipulation like [models, textures or sometimes sounds replacement](https://youtu.be/6wY1FnQ9ygg). However, some mods offer new game mechanics, which means there are code changes involved.
 
