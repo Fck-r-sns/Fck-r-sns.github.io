@@ -4,6 +4,8 @@ title: "How mods are made for Unity games. Chapter 1: Inject mods into a game’
 page_title: "How mods are made for Unity games"
 page_subtitle: "Chapter 1: Inject mods into a game’s code"
 title_image: "/assets/img/2020-05-21-mods-1/title_image.png"
+image:
+    path: "/assets/img/2020-05-21-mods-1/title_image.png"
 date: 2020-05-21 16:00:00 +0300
 images_folder: "/assets/img/2020-05-21-mods-1"
 excerpt: How to inject mods into a Unity game using some tech tricks including game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
