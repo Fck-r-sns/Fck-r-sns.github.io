@@ -8,7 +8,7 @@ image:
     path: "/assets/img/2020-05-28-mods-2/title_image_small.png"
 date: 2020-05-28 23:00:00 +0300
 images_folder: "/assets/img/2020-05-28-mods-2"
-excerpt: "How to write a mod for Unity game using C#, a decompiler and Harmony, a powerful modding library used in RimWorld, Battletech, Cities: Skylines and many other games"
+excerpt: "How to write a mod for a Unity game using C#, a decompiler and Harmony, a powerful modding library used in RimWorld, Battletech, Cities: Skylines and many other games"
 ---
 In this chapter we will take a look at how to write a Beat Saber mod in C# using BSIPA and what common problems we need to solve to make a mod for a Unity game. We will also take a look at Harmony, a library to modify code in runtime which is used in mods for RimWorld, Battletech, Cities: Skylines and many other games. Everything that is written here is suitable, with some assumptions, for any Unity game based on Mono and running on Windows.
 
