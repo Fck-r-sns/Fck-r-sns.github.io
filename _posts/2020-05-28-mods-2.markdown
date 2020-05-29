@@ -456,6 +456,8 @@ IEnumerator InitGamePauseCallbacks()
 }
 ```
 
+.First() or .FirstOrDefault() from LINQ can be used instead of raw arrays here. It's a matter of code style.
+
 We can start it in OnActiveSceneChanged:
 
 ```cs
