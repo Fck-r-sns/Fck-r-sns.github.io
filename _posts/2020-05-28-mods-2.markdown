@@ -95,6 +95,8 @@ namespace BeatSaberTimeTracker
 }
 ```
 
+SingleStartInit means that the mod is initialized once on the game start. The other option is DynamicInit which makes a mod disableable and enableable in runtime.
+
 The class name can be any but in most cases it is called Plugin. Namespace must be the same with the one used in the manifest.json (BeatSaberTimeTracker in our case). At this step the mod just logs all the method calls into a file.
 
 To build this we need to resolve dependencies. The attributes are defined in IPA.Loader.dll. We already injected mods using ModAssistant and therefore all the needed files are in the game folders. IPA.Loader.dll can be found in Beat Saber/Beat Saber_Data/Managed in the Steam folder (assuming that we have a Steam version of Beat Saber). The usual way to resolve dependencies is just to add them directly from the game folder. [It is suggested by BSMG](https://bsmg.wiki/modding/intro.html#fixing-references).
