@@ -211,7 +211,7 @@ public void OnStart()
 }
 ```
 
-To protect the TimeTracker from garbage collection we need to either attach it to a scene or call DontDestroyOnLoad(...). The latter is easier.
+To protect the TimeTracker from being destroyed when a new scene is loaded we need to either attach it to a scene which always exists or call DontDestroyOnLoad(...). The latter is easier.
 
 We still need to resolve the dependencies. GameObject and MonoBehaviour are defined in UnityEngine.CoreModule.dll. TextMeshPro is in UnityEngine.UI.dll and Unity.TextMeshPro.dll. Canvas is in UnityEngine.UIModule.dll. The libraries can be found in the game folder with managed libraries.
 
