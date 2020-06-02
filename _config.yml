@@ -23,6 +23,11 @@ author_name: Evgeniy Prikhodko
 email: fck.r.sns@gmail.com
 description: A personal website / portfolio / blog about game development
 
+image:
+    path: "/assets/img/owl.png"
+    width: 100
+    height: 100
+
 social:
     github: https://github.com/Fck-r-sns
     linkedin: https://www.linkedin.com/in/evgeniyprikhodko/
@@ -40,6 +45,7 @@ style:
 # Build settings
 theme: jekyll-theme-midnight
 plugins:
+  - jekyll-seo-tag
 
 defaults:
   - scope:
