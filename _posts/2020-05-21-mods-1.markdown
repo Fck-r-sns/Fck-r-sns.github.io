@@ -1,0 +1,382 @@
+---
+layout: post
+title: "How mods are made for Unity games. Chapter 1: Inject mods into a game’s code"
+page_title: "How mods are made for Unity games"
+page_subtitle: "Chapter 1: Inject mods into a game’s code"
+title_image: "/assets/img/2020-05-21-mods-1/title_image.png"
+image:
+    path: "/assets/img/2020-05-21-mods-1/title_image_small.png"
+date: 2020-05-21 16:00:00 +0300
+images_folder: "/assets/img/2020-05-21-mods-1"
+excerpt: How to inject mods into a Unity game using some tech tricks including game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
+---
+There are not so many video games with built in mods support, but we constantly see news about modders making mods for all kinds of video games. In most cases it’s about asset manipulation like [models, textures or sometimes sounds replacement](https://youtu.be/6wY1FnQ9ygg). However, some mods offer new game mechanics, which means there are code changes involved.
+
+I’ve spent a lot of time playing Beat Saber both without and with mods. One day I got a couple of ideas about features which would be cool to add in the game so I started learning how mods are made. I’ve thoroughly examined the source code of existing mods and mods injectors and this article is about what I’ve learned there. It includes some tech tricks like game and engine libraries manipulation, dll input address table hooking and Mono Runtime hijacking.
+
+![]({{page.images_folder}}/title_image.png)
+*Image sources: [1](https://www.oculus.com/experiences/quest/2448060205267927/), [2](https://youtu.be/OH4txDD23_c)*
+
+## About Beat Saber
+
+Beat Saber is one of the most popular games for VR headsets. If you have one, you most probably know about this game. If not, then you might have seen one of the game videos on Youtube in the Recommended section.
+
+<iframe width="650" height="370" src="https://www.youtube.com/embed/qPlUNAI7qV4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+The only user content that is natively supported by Beat Sabber is custom levels. There is an official editor for them, but no service to distribute user levels. Almost each level is based on a song, and if developers had a service for them, they would have to deal with all sorts of legal issues with music labels. So, apparently there is a huge modding community grown from Beat Saber players: Beat Saber Modding Group ([BSMG](bsmg.wiki)). Thanks to them we have a lot of user generated stuff in the game.
+
+- [beatsaver.com](https://beatsaver.com) - a collection of thousands of custom levels. There are tens of new levels every day.
+- [bsaber.com](https://bsaber.com) - community guided filters for the custom levels from beatsaver.com: reviews, articles, curators’ picks, music genre filters, etc.
+- [scoresaber.com](https://scoresaber.com) - leaderboards for custom levels.
+- [modelsaber.com](https://modelsaber.com) - 3D-visual content like custom sabers, avatars and platforms.
+- [beatmods.com](https://beatmods.com) - a collection of code related mods.
+- [github.com/Assistant/ModAssistant](https://github.com/Assistant/ModAssistant) - ModAssistant, a software app to help players install and manage their mods. Players just select what they want and click “Install”. No need to copy files in the game folders, everything is done by ModAssistant.
+
+These are developed and supported by the community. Most of the mods and websites are open-source software that can be found on GitHub. This text is actually based on my research of this source code, so it wouldn’t exist otherwise. There are code examples in this text, but they are simplified to show just the main idea without boilerplate code. You can check the original GitHub repositories if you want to get the full picture.
+
+## Some general knowledge about Unity architecture
+
+Beat Saber is powered by the Unity game engine. Game developers use C# to implement game logic in Unity. In this sense we can say that C# is a scripting language (thought it’s not correct for C# in general). Programs written in C# are being built into so called [managed .NET assemblies](https://docs.microsoft.com/en-us/dotnet/standard/assembly/), dll libraries containing Common Intermediate Language instructions (CIL or sometimes just IL). Game logic and UI related parts of Unity are written in C# as well. Since Unity’s core is written in C++ there must be a way to run managed C# code, so there must be an additional scripting engine over the core Unity engine able to execute CIL and share data with the core. In order to do this, Unity uses Mono.
+
+Mono is one of the Common Language Infrastructure (CLI) implementations. It’s free and open-source software being able to run on Windows, Linux, macOS, mobile devices and game consoles. It has been in development since 2001. Initially there was a company called Ximian, then Ximian was acquired by Novell in 2003, then Novell was acquired by Attachmate in 2011, then there were massive layoffs in Attachmate, then Mono developers created a new company Xamarin which was acquired by Microsoft in 2016.
+
+This is a common way of game development when high-performance part of an engine is written in C or C++ and game logic is written in a high level scripting language (e.g. Lua). The advantage of C# as a scripting language is that it is “high-level” enough to make development simpler and faster, but it also allows to use [JIT-compilation](https://en.wikipedia.org/wiki/Just-in-time_compilation) into native code.
+
+![]({{page.images_folder}}/mono_architecture.png)
+
+You can read more about this in the [Mono documentation](https://www.mono-project.com/docs/advanced/embedding/scripting/).
+
+Software game mods (also known as plugins) are dll files (.NET assemblies in case of Unity) which add new features into a game and are loaded into memory together with the game executables. The main problem we have here is that if a game doesn’t support plugins, then it won’t load any additional dlls. Mod injectors are used to fix this. One of them is BSIPA.
+
+## BSIPA
+
+![]({{page.images_folder}}/bsipa_logo.png)
+
+BSIPA (Beat Saber Illusion Plugin Architecture) is a set of libraries to modify Beat Saber files to make it able to load and run custom mods. BSIPA is written in C# ([source code](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded)) and it is a fork of IPA ([source code](https://github.com/Eusth/IPA)). This means modders used existing plugin injector IPA and modified it to better fit Beat Saber (and add some game agnostic general improvements). There are three main modules in the source code: IPA, IPA.Loader and IPA.Injector. Actually there are more of them, but these three are the most important.
+
+## IPA.exe
+
+Normally players use ModAssistant or its equivalents to install mods but we will do it manually. To do so we need to download the latest release of BSIPA, unpack it into the game’s root folder and run IPA.exe. It’s an executable which copies files from the IPA folder to the corresponding game folders. And this is basically it. It just copies files and makes backups if there were files with the same names. Here is the list of files:
+
+```
+Beat Saber_Data\Managed\I18N.dll
+Beat Saber_Data\Managed\I18N.West.dll
+Beat Saber_Data\Managed\IPA.Injector.dll
+Beat Saber_Data\Managed\IPA.Injector.pdb
+Beat Saber_Data\Managed\IPA.Loader.dll
+Beat Saber_Data\Managed\IPA.Loader.pdb
+Beat Saber_Data\Managed\IPA.Loader.xml
+Beat Saber_Data\Managed\Microsoft.CSharp.dll
+Beat Saber_Data\Managed\System.Runtime.Serialization.dll
+Libs\0Harmony.1.2.0.1.dll
+Libs\Ionic.Zip.1.9.1.8.dll
+Libs\Mono.Cecil.0.10.4.0.dll
+Libs\Mono.Cecil.Mdb.0.10.4.0.dll
+Libs\Mono.Cecil.Pdb.0.10.4.0.dll
+Libs\Mono.Cecil.Rocks.0.10.4.0.dll
+Libs\Newtonsoft.Json.12.0.0.0.dll
+Libs\SemVer.1.2.0.0.dll
+winhttp.dll
+```
+
+We can see the other two BSIPA modules here: IPA.Loader.dll и IPA.Injector.dll. Other libraries are needed to make these two work.
+
+## IPA.Loader.dll
+
+As it might be deducted from the library’s name it contains code which loads plugins into the game. [PluginLoader](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/e6097054b26d7a7cf584f5acb928b92b168ebc2c/IPA.Loader/Loader/PluginLoader.cs) is a main class to do it. Original IPA just loads dlls in alphabetical order which might cause some issues. BSIPA loads metadata to build a dependency tree and uses it to determine the loading order of dlls. [PluginComponent](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/e6097054b26d7a7cf584f5acb928b92b168ebc2c/IPA.Loader/Loader/PluginComponent.cs) is a Unity component to store loaded plugins and manage their lifecycle.
+
+## IPA.Injector.dll
+
+The name “Injector” shows that this module is somehow related to the mods injection. Let’s start from the interesting fact: BSIPA adds an antipiracy protection into the game.
+
+```cs
+if (AntiPiracy.IsInvalid(Environment.CurrentDirectory))
+{
+    loader.Error("Invalid installation; please buy the game to run BSIPA.");
+    return;
+}
+```
+
+It’s a very simple protection, it just checks if there are files indicating that this particular copy of the game has been cracked: SmartSteamEmu.ini, BSteam crack.dll, HUHUVR_steam_api64.dll, etc.
+
+```cs
+public static bool IsInvalid(string path)
+{
+    var dataPlugins = Path.Combine(GameVersionEarly.ResolveDataPath(path), "Plugins");
+    return 
+        File.Exists(Path.Combine(path, "IGG-GAMES.COM.url")) ||
+        File.Exists(Path.Combine(path, "SmartSteamEmu.ini")) ||
+        File.Exists(Path.Combine(path, "GAMESTORRENT.CO.url")) ||
+        File.Exists(Path.Combine(dataPlugins, "BSteam crack.dll")) ||
+        File.Exists(Path.Combine(dataPlugins, "HUHUVR_steam_api64.dll")) ||
+        Directory.GetFiles(dataPlugins, "*.ini", SearchOption.TopDirectoryOnly).Length > 0;
+}
+```
+
+I suppose this was done for BSIPA's own purpose: mods injection is basically a crack. So if the game is cracked twice, it might become completely broken and unplayable.
+
+IPA.Injector uses a third-party library: Mono.Cecil ([source code](https://github.com/jbevain/cecil)). Mono.Cecil has been in development since 2004, i.e. since the release of the first version of Mono and it is written by Jb Evain one of the Mono developers from Novell. He is a lead developer of Visual Studio Tools for Unity in Microsoft now. Mono.Cecil is used to read and modify managed .NET assemblies: change class attributes, access modifiers and IL-instructions.
+
+IPA.Injector uses Mono.Cecil to edit UnityEngine.CoreModule.dll which is a Unity’s library containing basic game entities like GameObject and MonoBehaviour classes. IPA.Injector finds a class UnityEngine.Application and modifies its static constructor (or adds one if there is none) adding a bootstrapper there.
+
+```cs
+var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters { ... });
+var unityModDef = unityAsmDef.MainModule;
+var application = unityModDef.GetType("UnityEngine", "Application");
+MethodDefinition cctor = null;
+foreach (var m in application.Methods)
+    if (m.IsRuntimeSpecialName && m.Name == ".cctor")
+        cctor = m;
+
+var createBootstrapper = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
+
+if (cctor == null)
+{
+    cctor = new MethodDefinition(".cctor", ...);
+    application.Methods.Add(cctor);
+
+    var ilp = cctor.Body.GetILProcessor();
+    ilp.Emit(OpCodes.Call, cbs);
+    ilp.Emit(OpCodes.Ret);
+}
+else
+{
+    var ilp = cctor.Body.GetILProcessor();
+    ilp.Replace(cctor.Body.Instructions[0], ilp.Create(OpCodes.Call, cbs));
+    ilp.Replace(cctor.Body.Instructions[1], ilp.Create(OpCodes.Ret));
+}
+```
+
+I double checked it for Unity 2019.3.0f3: there is no static constructor for the Application class, so it’s relatively safe to do this modification, no existing code is removed. If IPA.Injector happens to modify the static constructor, it means that the game has been modified already with the previous version of BSIPA.
+
+After the modification there is a new static constructor in the Application class. I decompiled the modified UnityEngine.CoreModule.dll library to verify it.
+
+```cs
+static Application()
+{
+    IPA.Injector.Injector.CreateBootstrapper();
+}
+```
+
+The CreateBootstrapper method creates a new GameObject instance and adds a Bootstrapper component to it.
+
+```cs
+private static void CreateBootstrapper()
+{
+    ...
+    var bootstrapper = new GameObject("NonDestructiveBootstrapper")
+            .AddComponent<Bootstrapper>();
+    bootstrapper.Destroyed += Bootstrapper_Destroyed;
+}
+```
+
+Bootstrapper has a peculiar technical solution. Basically it’s just a wrapper for a callback.
+
+```cs
+internal class Bootstrapper : MonoBehaviour
+{
+    public event Action Destroyed = delegate {};
+
+    public void Start()
+    {
+        Destroy(gameObject);
+    }
+
+    public void OnDestroy()
+    {
+        Destroyed();
+    }
+}
+```
+
+In its Start method Bootstrapper calls destruction of its parent GameObject instance. In the OnDestroy method it invokes the wrapped callback which has been set in CreateBootstrapper.
+
+```cs
+private static void Bootstrapper_Destroyed()
+{
+    // wait for plugins to finish loading
+    pluginAsyncLoadTask.Wait();
+    permissionFixTask.Wait();
+
+    BeatSaber.EnsureRuntimeGameVersion();
+    PluginComponent.Create();
+}
+```
+
+This callback is waiting until async plugin loading ends and creates a PluginComponent instance. Frankly speaking I don’t know why Bootstrapper uses this OnDestroy callback. My suggestion is that it’s used to delay callback invocation until Bootstrapper is active and this happens only after a game scene is loaded.
+
+Thus, when Unity loads its C# assemblies the Application static constructor is invoked, plugins are loaded and PluginComponent is created. So, mods support is injected not into the game, but into the engine itself.
+
+IPA.Injector also edits assemblies containing Beat Saber code. Using Mono.Cecil the Injector unseals all classes (i.e. removes “sealed” keyword from them) and makes all methods public and virtual. It’s not required for plugins injection, but it makes mods development much easier: any mod can extend any game class and override any method.
+
+If we used the original IPA we could stop right now, this would be enough. IPA.exe in the original IPA invokes IPA.Injector and modifies Unity and game libraries. There is one downside of this: if the game is updated, we need to run IPA.exe again because game files are replaced with their newer unmodified versions. BSIPA solves this problem, but as I mentioned earlier, IPA.exe in BSIPA doesn’t change files, it just copies its libraries to the game folders. Its developers took another popular plugin injector [BepInEx](https://github.com/BepInEx/BepInEx) as a reference and used UnityDoorstop to run the Injector.
+
+## Unity Doorstop
+
+![]({{page.images_folder}}/doorstop_logo.png)
+
+A library called UnityDoorstop-BSIPA is responsible for the actual injection and it’s a part of BSIPA package. It’s written in pure C ([source code](https://github.com/nike4613/UnityDoorstop-BSIPA)) and it’s a fork as well, original project can be found here: [source code](https://github.com/NeighTools/UnityDoorstop). Doorstop’s motto is “Run managed code before Unity does!”. Managed code in our case is the C# part of Unity and game scripts. The motto means that Doorstop can somehow inject our custom code after the C++ core is loaded but before C# scripts are.
+
+When we launch a Unity game (e.g. Beat Saber.exe) we load its executables into memory. One of the libraries being loaded first is UnityPlayer.dll: it goes with all Unity games and is responsible for the actual game start and execution. This library has an Import Address Table ([IAT](https://en.wikipedia.org/wiki/Portable_Executable#Import_table)) which has a row that declares that UnityPlayer.dll uses a function GetProcAddress from a library kernel32.dll. kernel32.dll is a system library stored in C:\Windows\System32 (if you have the default Windows installation path).
+
+GetProcAddress is a WinAPI function which returns an external dll function address by its name. I haven’t seen Unity’s source code but concerning how BSIPA and Doorstop work there must be something like this (C-like pseudo code):
+
+```c
+mono_dll = LoadLibrary("Mono.dll");
+init_mono = GetProcAddress(mono_dll, "mono_jit_init_version");
+mono = init_mono(...);
+// use mono to load and launch the game
+```
+
+mono_jit_init_version is a function to start and initialize a Mono domain. More info can be found in [the official docs](https://www.mono-project.com/docs/advanced/embedding/). Doorstop intervenes in this process in two steps.
+
+### Step 1. Hook GetProcAddress
+
+Dynamic libraries (dlls) might have a function DllMain which is invoked when a library is loaded to/unloaded from memory or attached to/detached from a process. After Doorstop.dll is loaded and attached to Unity process its DllMain is called with `reasonForDllLoad == DLL_PROCESS_ATTACH` and this code is executed:
+
+```c
+HMODULE targetModule = GetModuleHandleA("UnityPlayer");
+iat_hook(targetModule, "kernel32.dll", &GetProcAddress, &hookGetProcAddress);
+```
+
+It gets UnityPlayer.dll from memory, gets its Import Address Table (IAT), searches for GetProcAddress there and replaces it with hookGetProcAddress from Doorstop.dll.
+
+```c
+void * WINAPI hookGetProcAddress(HMODULE module, char const *name)
+{
+    if (lstrcmpA(name, "mono_jit_init_version") == 0)
+    {
+        init(module);
+        return (void*)&ownMonoJitInitVersion;
+    }
+    return (void*)GetProcAddress(module, name);
+}
+```
+
+More about IAT hooking can be found [here](https://pentest.blog/offensive-iat-hooking/). The function hookGetProcAddress proxies all GetProcAddress calls. If a requested function’s name is NOT mono_jit_init_version, then it forwards the call to the real GetProcAddress function, so it doesn’t break the normal way of work. If it IS mono_jit_init_version, then it returns an overridden function ownMonoJitInitVersion. The proxy function also uses this opportunity to get a module with real Mono functions and get everything it needs from it in init(module); with GetProcAddress calls.
+
+```c
+/**
+* \brief Loads Mono C API function pointers so that the above definitions can be called.
+* \param monoLib Mono.dll module.
+*/
+inline void loadMonoFunctions(HMODULE monoLib)
+{
+    // Enjoy the fact that C allows such sloppy casting
+    // In C++ you would have to cast to the precise function pointer type
+#define GET_MONO_PROC(name) name = (void*)GetProcAddress(monoLib, #name)
+    
+    // Find and assign all our functions that we are going to use
+    GET_MONO_PROC(mono_debug_domain_create);
+    GET_MONO_PROC(mono_domain_assembly_open);
+    GET_MONO_PROC(mono_assembly_get_image);
+    GET_MONO_PROC(mono_runtime_invoke);
+    GET_MONO_PROC(mono_debug_init);
+    GET_MONO_PROC(mono_jit_init_version);
+    GET_MONO_PROC(mono_jit_parse_options);
+    GET_MONO_PROC(mono_method_desc_new);
+    GET_MONO_PROC(mono_method_desc_search_in_image);
+    GET_MONO_PROC(mono_method_signature);
+    GET_MONO_PROC(mono_signature_get_param_count);
+    GET_MONO_PROC(mono_array_new);
+    GET_MONO_PROC(mono_get_string_class);
+    GET_MONO_PROC(mono_string_new_utf16);
+    GET_MONO_PROC(mono_gc_wbarrier_set_arrayref);
+    GET_MONO_PROC(mono_array_addr_with_size);
+    GET_MONO_PROC(mono_object_to_string);
+    GET_MONO_PROC(mono_string_to_utf8);
+    GET_MONO_PROC(mono_dllmap_insert);
+    GET_MONO_PROC(mono_free);
+}
+```
+
+### Step 2. Override mono_jit_init_version
+
+First, ownMonoJitInitVersion calls real mono_jit_init_version to instantiate a Mono domain. Then it uses the domain to load our assembly IPA.Injector.dll and call its static method Main. 
+
+```c
+void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_version)
+{
+    void *domain = mono_jit_init_version(root_domain_name, runtime_version);
+
+    // Load our custom assembly into the domain
+    void *assembly = mono_domain_assembly_open(domain, dll_path); // dll_path is the path to IPA.Injector.dll
+
+    // Get assembly's image that contains CIL code
+    void *image = mono_assembly_get_image(assembly);
+
+    // Create a descriptor for a random Main method
+    void *desc = mono_method_desc_new("*:Main", FALSE);
+
+    // Find the first possible Main method in the assembly
+    void *method = mono_method_desc_search_in_image(desc, image);
+
+    // Invoke the Main method
+    mono_runtime_invoke(method, NULL, args, &exception);
+
+    // Return the Mono domain back to the caller (Unity)
+    return domain;
+}
+```
+
+As we already know, IPA.Injector contains code which injects plugins into Beat Saber (actually into one of Unity's assemblies). After IPA.Injector’s code is done, ownMonoJitInitVersion  passes Mono to Unity. The engine isn’t able to detect a difference. If it called the real mono_jit_init_version, it would get a Mono domain. When it calls the overridden ownMonoJitInitVersion, it still gets a Mono domain, but it doesn’t know that the domain has been used already.
+
+## winhttp.dll
+
+There is one problem left to solve. Let’s take a look at the list of files IPA.exe installs into the game’s folders.
+
+```
+Beat Saber_Data\Managed\I18N.dll
+Beat Saber_Data\Managed\I18N.West.dll
+Beat Saber_Data\Managed\IPA.Injector.dll
+Beat Saber_Data\Managed\IPA.Injector.pdb
+Beat Saber_Data\Managed\IPA.Loader.dll
+Beat Saber_Data\Managed\IPA.Loader.pdb
+Beat Saber_Data\Managed\IPA.Loader.xml
+Beat Saber_Data\Managed\Microsoft.CSharp.dll
+Beat Saber_Data\Managed\System.Runtime.Serialization.dll
+Libs\0Harmony.1.2.0.1.dll
+Libs\Ionic.Zip.1.9.1.8.dll
+Libs\Mono.Cecil.0.10.4.0.dll
+Libs\Mono.Cecil.Mdb.0.10.4.0.dll
+Libs\Mono.Cecil.Pdb.0.10.4.0.dll
+Libs\Mono.Cecil.Rocks.0.10.4.0.dll
+Libs\Newtonsoft.Json.12.0.0.0.dll
+Libs\SemVer.1.2.0.0.dll
+winhttp.dll
+```
+
+I’ve mentioned the Doorstop.dll library, but as we can see, there is no Doorstop.dll on the list. But even if it was, why would Unity or Beat Saber load it? It’s not in the Import Address Table of any of their libraries. A solution here is to disguise it as an existing library and make sure Unity loads the fake library before the real one. Such an existing library in our case is winhttp.dll, a system library used for http requests which is stored in C:/Windows/System32 (in case you have the default Windows path). At least one of Unity’s libraries has winhttp.dll in its Import Address Table, so when we start the game, Windows loads it together with other dependencies before it passes control to Unity’s entry point.
+
+Doorstop is built into an assembly with the same name: winhttp.dll. It contains the Doorstop code including GetProcAddress and mono_jit_init_version together with an Export Address Table with all the records from the original winhttp.dll library. When Windows loads dynamic libraries it checks the executable’s folder first and then if nothing is found it goes to the system folder (the System32 one). So it finds our fake winhttp.dll in the game’s folder before it finds the real one in the system folder. The fake one loads the real one dynamically using LoadLibrary and passes all calls from Export Address Table entries to the real functions using GetProcAddress.
+
+There are scripts to generate such kinds of proxy libraries: for IPA it’s written in PowerShell and for BSIPA it is in Python. They have almost the same logic: they use a template file and a list of EAT functions to generate a proxy.c file which then is used to build a disguised Doorstop library.
+
+## All the actions in chronological order
+
+Let’s recall all the actions in chronological order to get the full picture of the mods injection.
+
+- Run IPA.exe. Its libraries are copied into the right folders. No code changes at this moment.
+- Run the game (Beat Saber.exe).
+- Windows looks for system libraries used by Unity. It finds and loads fake winhttp.dll with Doorstop code inside.
+- Doorstop runs its code and hooks GetProcAddress with hookGetProcAddress.
+- UnityPlayer.dll is loaded. It contains Unity code written in C++.
+- Unity tries to call GetProcAddress to get mono_jit_init_version, but it calls hookGetProcAddress instead and gets ownMonoJitInitVersion.
+- ownMonoJitInitVersion creates a Mono domain.
+- ownMonoJitInitVersion uses the Mono domain to load IPA.Injector.dll and call its method Main.
+- IPA.Injector uses Mono.Cecil to modify the Application class from UnityEngine.CoreModule.dll to add a static constructor with the mods loader there.
+- ownMonoJitInitVersion passes the Mono domain to Unity.
+- Unity uses Mono to run its C# assemblies.
+- Modified Application class is loaded. It runs its static constructor to create a bootstrapper.
+- Unity uses Mono to load and run Beat Saber’s assemblies.
+- The bootstrapper loads mods and creates PluginComponent.
+- The original Beat Saber code and mods are in memory.
+- We can play the game with mods.
+
+## ***
+
+That's the end of the chapter 1. Now we know how to inject mods into Beat Saber in Windows using some dynamic library manipulations. Although BSIPA is a fork made specially for Beat Saber, there are no game data references mentioned in this text. It means all the mentioned tricks and BSIPA itself (with small changes) can be applied for any game powered by Unity.
+
+## Acknowledgement
+
+I want to mention the BSMG community and especially DaNike here and say thanks for answering my questions in Discord and helping me understand how some of the most critical steps in the mods injection actually work. Thank you guys!
