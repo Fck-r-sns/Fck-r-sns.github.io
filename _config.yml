@@ -20,15 +20,14 @@
 
 title: Binary machinery
 author_name: Evgeniy Prikhodko
-email: fck.r.sns@gmail.com
 description: A personal website / portfolio / blog about game development
 
 social:
-    github: https://github.com/Fck-r-sns
+    github: https://github.com/binary-machinery
     linkedin: https://www.linkedin.com/in/evgeniyprikhodko/
-    email: fck.r.sns@gmail.com
+    email: binary.machinery@gmail.com
     telegram: "@fck_r_sns"
-    discord: Jhon (Fck_r_sns)#6909
+    discord: Jhon#6909
 
 jekyll_url: https://github.com/jekyll/jekyll
 theme_name: midnight
