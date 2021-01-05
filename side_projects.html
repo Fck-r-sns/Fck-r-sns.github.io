@@ -1,0 +1,20 @@
+---
+layout: default
+title: Evgeniy Prikhodko
+permalink: /side-projects/
+---
+
+{% assign side_projects = site.side_projects | sort: 'date' | reverse %}
+{% for item in side_projects %}
+<div>
+
+    <div>{{ item.year }}</div>
+    <h1><a>{{ item.title | escape }}</a></h1>
+    <div>{{ item.content }}</div>
+
+    {%- if forloop.last == false -%}
+    <hr>
+    {%- endif -%}
+
+</div>
+{% endfor %}
