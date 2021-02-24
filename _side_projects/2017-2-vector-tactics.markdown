@@ -8,7 +8,7 @@ My master's thesis was about AI algorithms for video games. `Vector Tactics` is 
 
 There are four bots, one for each AI architecture from the thesis: Finite State Machine, Behaviour Tree, Neural Network, and Fuzzy Logic. The bots fight each other in the arena to decide which one is the best AI. Or which one is better implemented.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/rwFgxaz7yrA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+<iframe width="650" height="370" src="https://www.youtube.com/embed/rwFgxaz7yrA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
 
 Technologies used: C#, Unity
   
