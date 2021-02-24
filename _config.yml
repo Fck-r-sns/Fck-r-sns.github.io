@@ -31,6 +31,8 @@ jekyll_url: https://github.com/jekyll/jekyll
 theme_name: midnight
 theme_url: https://github.com/pages-themes/midnight
 
+google_analytics_tracking_id: G-PPMSSDQ24G
+
 style:
     date_format: "%b %-d, %Y"
 
