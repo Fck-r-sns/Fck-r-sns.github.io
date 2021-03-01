@@ -10,7 +10,7 @@ Generative (a.k.a. procedural) music is music created by a system, music created
 
 <iframe width="650" height="346" src="https://www.youtube.com/embed/SjmrtRajBBE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-The main issue with the project is that generated melodies sound almost the same. Apparently, it's not that easy to teach a computer to produce music with just random numbers. E.g., a key doesn't only mean that there are a particular set of chords. It also means that there is a particular root note that tends to sound more often than the others. But how much more often?
+The main issue with the project is that generated melodies sound almost the same. Apparently, it's not that easy to teach a computer to produce music with just random numbers. E.g., a key doesn't only mean that there is a particular set of chords. It also means that there is a particular root note that tends to sound more often than the others. But how much more often?
 
 We need to either use machine learning here or use some manual weight coefficients for root notes. The first one looks like the job for Google, Apple, Spotify, or another company with an immense amount of music data. The second one sounds like too many manual coefficients to make it sound good. So, the project is frozen at the moment.
 
