@@ -10,6 +10,6 @@ I had some design ideas (and still do) about a strategy game where a player prot
 
 The prototype showed that RTS is not a very good idea. I think that a city-builder with indirect unit control would fit the story better.
 
-Technologies used: C#, Unity
+Technologies used: C#, Unity.
   
 Source code: [GitHub](https://github.com/binary-machinery/DisasterCity)

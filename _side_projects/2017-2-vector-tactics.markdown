@@ -10,6 +10,6 @@ There are four bots, one for each AI architecture from the thesis: Finite State 
 
 <iframe width="650" height="346" src="https://www.youtube.com/embed/rwFgxaz7yrA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
 
-Technologies used: C#, Unity
+Technologies used: C#, Unity.
   
 Source code: [GitHub](https://github.com/binary-machinery/VectorTactics)

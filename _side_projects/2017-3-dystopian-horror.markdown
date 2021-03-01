@@ -8,6 +8,8 @@ title: "Dystopian Horror"
 
 <iframe width="650" height="365" src="https://www.youtube.com/embed/fAWWG4Pqa9o" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-Technologies used: C#, Unity
+The project might be considered either a short 5-minute horror game or a demo of a game that will never be released.
+
+Technologies used: C#, Unity.
   
 Source code: [GitHub](https://github.com/binary-machinery/DystopianHorror)
