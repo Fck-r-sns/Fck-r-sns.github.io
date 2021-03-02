@@ -12,4 +12,4 @@ The app loads the schedule's webpage and parses HTML to get a table from it (the
 
 Technologies used: Java, RxJava, Android SDK.
  
-Source code: [GitHub](https://github.com/binary-machinery/libmodbus_cpp)
+Source code: [GitHub](https://github.com/binary-machinery/AvalonSchedule)
