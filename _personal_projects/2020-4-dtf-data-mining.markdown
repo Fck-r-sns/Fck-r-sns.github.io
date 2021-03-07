@@ -10,7 +10,7 @@ API has a limit for requests per second, but I managed to copy all users and pos
 
 E.g., this is a graph of new users per week.
 
-![](/assets/img/side-projects/dtf_new_users.PNG)
+![](/assets/img/personal-projects/dtf_new_users.PNG)
 
 There are definitely some anomalies here, so this way, I detected some bot attacks on the website.
 

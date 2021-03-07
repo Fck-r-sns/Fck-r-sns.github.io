@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Evgeniy Prikhodko
-permalink: /side-projects/
+permalink: /personal-projects/
 ---
 
 <div>
@@ -12,8 +12,8 @@ permalink: /side-projects/
     <li>Add readmes to the github repos</li>
 </ul>
 
-{% assign side_projects = site.side_projects | sort: 'date' | reverse %}
-{% for item in side_projects %}
+{% assign personal_projects = site.personal_projects | sort: 'date' | reverse %}
+{% for item in personal_projects %}
 <div>
 
     <div>{{ item.year }}</div>

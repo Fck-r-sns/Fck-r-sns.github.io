@@ -48,7 +48,7 @@ defaults:
       image: true
 
 collections:
-  side_projects:
+  personal_projects:
     output: true
 
 
