@@ -2,6 +2,7 @@
 layout: post
 year: 2020
 title: "Slower Than Light"
+subtitle: "A game for Finnish Game Jam 2020 powered by Unity"
 ---
 
 `Slower Than Light` is a game for Finnish Game Jam 2020 (a Global Game Jam branch). The theme was "Repair," so we decided to create a game about an alien trying to get to his home, but his ship is constantly breaking. To fix it, a player needs to solve puzzles. The puzzle is an alien ship device. Each device contains a set of pieces that are supposed to look like alien technology.

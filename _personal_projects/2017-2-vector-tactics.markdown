@@ -2,6 +2,7 @@
 layout: post
 year: 2017
 title: "Vector Tactics"
+subtitle: "A simple top-down shooter for AI algorithms testing"
 ---
 
 My master's thesis was about AI algorithms for video games. `Vector Tactics` is a simple top-down shooter I developed to test AI architectures.

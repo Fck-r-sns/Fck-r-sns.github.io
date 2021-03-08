@@ -4,20 +4,13 @@ title: Evgeniy Prikhodko
 permalink: /personal-projects/
 ---
 
-<div>
-    TODO
-</div>
-<ul>
-    <li>Add subtitles</li>
-    <li>Add readmes to the github repos</li>
-</ul>
-
 {% assign personal_projects = site.personal_projects | sort: 'date' | reverse %}
 {% for item in personal_projects %}
 <div>
 
     <div>{{ item.year }}</div>
     <h1>{{ item.title | escape }}</h1>
+    <h3>{{ item.subtitle | escape }}</h3>
     <div>{{ item.content }}</div>
 
     {%- if forloop.last == false -%}

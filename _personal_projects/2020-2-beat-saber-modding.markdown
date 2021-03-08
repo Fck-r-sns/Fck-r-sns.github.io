@@ -2,6 +2,7 @@
 layout: post
 year: 2020
 title: "Beat Saber modding"
+subtitle: "How I reverse-engineered tools for mod injection into Unity games and created my own mod"
 ---
 
 [Beat Saber](https://store.steampowered.com/app/620980/Beat_Saber/) is a popular VR game powered by Unity. A significant part of its popularity is because of its modding community ([BSMG](https://bsmg.wiki/)). One day I decided to write my own mod, but before it, I wanted to learn how mods are made for Unity games.

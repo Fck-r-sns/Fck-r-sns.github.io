@@ -2,6 +2,7 @@
 layout: post
 year: 2017
 title: "Avalon Schedule"
+subtitle: "An Android app to parse university schedule and notify if it changes"
 ---
 
 I had an issue in my university: a schedule might have changed the day before a lecture, and students might have missed the change if they hadn't checked the university website in time. I developed a mobile app that loads the schedule, shows it in a format suitable for mobile devices, and sends push notifications if it has changed.

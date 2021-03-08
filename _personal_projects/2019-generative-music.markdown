@@ -2,6 +2,7 @@
 layout: post
 year: 2019
 title: "Generative Music"
+subtitle: "Experiments with music theory and music produced by algorithms"
 ---
 
 Generative (a.k.a. procedural) music is music created by a system, music created by algorithms. Inspired by some works of [Brian Eno](https://en.wikipedia.org/wiki/Brian_Eno), I decided to implement an app to produce generative music. I studied music theory at that time, so I tried to use some fundamental music ideas in the app. E.g., if chords are played in a key (e.g., C Major), they most probably will sound good.

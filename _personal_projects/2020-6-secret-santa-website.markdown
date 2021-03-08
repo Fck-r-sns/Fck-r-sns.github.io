@@ -2,6 +2,7 @@
 layout: post
 year: 2020
 title: "Secret Santa website"
+subtitle: "A Vue.js / Flask website for family Secret Santa events"
 ---
 
 Every New Year, we have a Secret Santa family event. One day we decided to create a personal website where people can sign in and join the event. When it starts, the event admin runs the sorting algorithm, and the app sends emails to all participants with a person to whom a participant needs to give a gift.
@@ -14,7 +15,7 @@ The sorting algorithm uses backtracking search. I wrote an article about it.
 
 - [How to solve the Secret Santa Problem using graph theory](https://binary-machinery.github.io/2021/02/03/secret-santa-graph.html)   
 
-Technologies used (yes, I listed every single one): Python, Flask, Flask-CORS, Flask-Login, Passlib, JavaScript, Vue.js, Vue Router, Vuex, Axios, HTML, AWS EC2, nginx.
+Technologies used (yes, I listed every single one): Python, Flask, Flask-CORS, Flask-Login, Passlib, SMTP, JavaScript, Vue.js, Vue Router, Vuex, Axios, HTML, AWS EC2, nginx.
 
 The backend project was created together with [kath-leen](https://github.com/kath-leen).
 

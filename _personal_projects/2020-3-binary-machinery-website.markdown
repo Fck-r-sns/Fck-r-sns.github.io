@@ -2,6 +2,7 @@
 layout: post
 year: 2020
 title: "Binary machinery website"
+subtitle: "A website/portfolio/blog powered by Jekyll and hosted at GitHub Pages"
 ---
 
 One day I learned that GitHub has GitHub Pages, and that I can use this service to create a static website. I thought I would make a cool static blog/portfolio website; I just needed to create a repository, install Jekyll, pick a UI theme, and GitHub will do the rest.

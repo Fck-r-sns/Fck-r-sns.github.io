@@ -2,6 +2,7 @@
 layout: post
 year: 2016
 title: "libmodbus_cpp"
+subtitle: "A C++/Qt wrapper for a C library for the Modbus protocol"
 ---
 
 [Modbus](https://en.wikipedia.org/wiki/Modbus) is a data communications protocol for computer systems, sensors, and hardware actors. It is used for production pipeline automation and SCADA monitoring.
