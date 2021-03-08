@@ -8,6 +8,8 @@ One day I learned that GitHub has GitHub Pages, and that I can use this service 
 
 Apparently, I was wrong. Yes, GitHub Pages are cool, and deployment went smoothly, but I had to write a bunch of layout files for Jekyll manually, which are a mix of HTML, YAML, and Liquid templates. At least it works, and you (most probably) are looking at it right now.
 
+![](/assets/img/personal-projects/blog_preview.png)
+
 Technologies used: Jekyll, GitHub Pages, HTML, CSS.
 
 Source code: [GitHub](https://github.com/binary-machinery/binary-machinery.github.io)
