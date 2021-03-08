@@ -17,7 +17,7 @@ permalink: /personal-projects/
 <div>
 
     <div>{{ item.year }}</div>
-    <h1><a>{{ item.title | escape }}</a></h1>
+    <h1>{{ item.title | escape }}</h1>
     <div>{{ item.content }}</div>
 
     {%- if forloop.last == false -%}
