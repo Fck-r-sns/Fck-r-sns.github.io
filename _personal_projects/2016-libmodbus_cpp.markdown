@@ -9,6 +9,6 @@ subtitle: "A C++/Qt wrapper for a C library for the Modbus protocol"
 
 [libmodbus](https://github.com/stephane/libmodbus) is a popular library for Modbus, but it is written in pure C. `libmodbus_cpp` is a C++/Qt wrapper for easier integration into Qt projects that we were working on at that moment. Since the original library is an LGPL project, we decided to share the wrapper at GitHub.
 
-Technologies used: C++, Qt.
+Technologies used: C++, Qt, libmodbus.
  
 Source code: [GitHub](https://github.com/binary-machinery/libmodbus_cpp)

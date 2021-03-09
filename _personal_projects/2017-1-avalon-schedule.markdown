@@ -11,6 +11,6 @@ I had an issue in my university: a schedule might have changed the day before a 
 
 The app loads the schedule's webpage and parses HTML to get a table from it (there was no public API). Every 2 hours, the app's background job checks the schedule in the background, and if it changes, it notifies the user about it.
 
-Technologies used: Java, RxJava, Android SDK.
+Technologies used: Java, RxJava, Android SDK, HTML.
  
 Source code: [GitHub](https://github.com/binary-machinery/AvalonSchedule)

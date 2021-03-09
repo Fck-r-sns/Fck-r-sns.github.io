@@ -16,6 +16,6 @@ As a result of the research, I wrote two articles about mod injection and develo
 - [How mods are made for Unity games. Chapter 1: Inject mods into a game’s code](https://binary-machinery.github.io/2020/05/21/mods-1.html)
 - [How mods are made for Unity games. Chapter 2: How to write a mod in C#](https://binary-machinery.github.io/2020/05/28/mods-2.html)
 
-Technologies used: C#, Unity, C# decompiler, C, Harmony.
+Technologies used: C#, Unity, C# decompiler, C, BSIPA, Unity Doorstop, Mono.Cecil, Harmony.
 
 Source code: [GitHub](https://github.com/binary-machinery/BeatSaberTimeTracker)
