@@ -2,38 +2,38 @@
 layout: default
 ---
 
-<div id="home">
+{% assign posts = site.posts %}
 
-  {% assign posts = site.posts %}
+{%- if posts.size > 0 -%}
+{%- if page.list_title -%}
+<h2>{{ page.list_title }}</h2>
+{%- endif -%}
 
-  {%- if posts.size > 0 -%}
-    {%- if page.list_title -%}
-      <h2>{{ page.list_title }}</h2>
+<div>
+  {%- for post in posts -%}
+  <div>
+
+    <div>{{ post.date | date: site.style.date_format }}</div>
+
+    <h1>
+      <a href="{{ post.url | relative_url }}">
+        <div>{{ post.page_title | escape }}</div>
+        <div>{{ post.page_subtitle | escape }}</div>
+      </a>
+    </h1>
+
+    <p>{{ post.excerpt | escape }}</p>
+
+    <p><img src="{{post.title_image}}" width="580"></p>
+
+    {%- if forloop.last == false -%}
+    <div class="post-delimiter">
+      <hr>
+    </div>
     {%- endif -%}
 
-    <div>
-      {%- for post in posts -%}
-
-      <div class="post">
-
-        <div>{{ post.date | date: site.style.date_format }}</div>
-
-        <h1>
-          <a href="{{ post.url | relative_url }}">
-            <div>{{ post.page_title | escape }}</div>
-            <div>{{ post.page_subtitle | escape }}</div>
-          </a>
-        </h1>
-
-        <p>{{ post.excerpt | escape }}</p>
-
-        <p><img src="{{post.title_image}}" width="580"></p>
-
-      </div>
-
-      {%- endfor -%}
-    </div>
-
-  {%- endif -%}
-
+  </div>
+  {%- endfor -%}
 </div>
+
+{%- endif -%}

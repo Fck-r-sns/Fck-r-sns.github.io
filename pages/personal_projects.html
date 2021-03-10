@@ -18,7 +18,9 @@ image:
     <div>{{ item.content }}</div>
 
     {%- if forloop.last == false -%}
-    <hr>
+    <div class="post-delimiter">
+        <hr>
+    </div>
     {%- endif -%}
 
 </div>
