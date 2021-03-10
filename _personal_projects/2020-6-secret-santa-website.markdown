@@ -19,4 +19,4 @@ Technologies used (yes, I listed every single one): Python, Flask, Flask-CORS, F
 
 The backend project was created together with [kath-leen](https://github.com/kath-leen).
 
-Source code: [Frontend@GitHub](https://github.com/binary-machinery/secret_santa_frontend) [Backend@GitHub](https://github.com/binary-machinery/secret_santa_backend)
+Source code: [The frontend code at GitHub](https://github.com/binary-machinery/secret_santa_frontend), [The backend code at GitHub](https://github.com/binary-machinery/secret_santa_backend)
