@@ -1,6 +1,6 @@
 ---
 layout: post
-year: 2017
+year: 2016
 title: "Avalon Schedule"
 subtitle: "An Android app to parse university schedule and notify if it changes"
 ---

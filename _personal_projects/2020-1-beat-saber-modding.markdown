@@ -1,6 +1,6 @@
 ---
 layout: post
-year: 2020
+year: 2019-2020
 title: "Beat Saber modding"
 subtitle: "How I reverse-engineered tools for mod injection into Unity games and created my own mod"
 ---
