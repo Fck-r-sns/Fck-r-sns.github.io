@@ -1,0 +1,16 @@
+---
+layout: post
+year: 2015-2016
+title: "VT"
+subtitle: "A prototype for a top-down tactical shooter with movement trajectory control"
+---
+
+I wanted to create a mobile top-down shooter game where tactic decisions and information are more important than the player's reaction. In the prototype, a player can draw a character's movement trajectory and select the direction of view at each step of this trajectory. This prototype was inspired by [Frozen Synapse](https://youtu.be/BOlV_9DYnOw).
+
+<iframe width="650" height="370" src="https://www.youtube.com/embed/GsFJ34qtVVw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+After some time spent with the prototype, I decided that such a control system is too complicated for a mobile game. The selected technology (libGDX) wasn't very promising and popular to continue development with it. The game idea had some game design issues. So, in the end, I decided not to continue working on the prototype.
+
+Technologies used: Java, libGDX.
+ 
+Source code: [GitHub](https://github.com/binary-machinery/VT)
