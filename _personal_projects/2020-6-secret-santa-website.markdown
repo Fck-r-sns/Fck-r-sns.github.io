@@ -15,7 +15,7 @@ The sorting algorithm uses backtracking search in a graph. I wrote an article ab
 
 - [How to solve the Secret Santa Problem using graph theory](https://binary-machinery.github.io/2021/02/03/secret-santa-graph.html)   
 
-Technologies used (yes, I listed every single one): Python, Flask, Flask-CORS, Flask-Login, Passlib, SMTP, JavaScript, Vue.js, Vue Router, Vuex, Axios, HTML, AWS EC2, nginx.
+Technologies used (yes, I listed every single one): Python, Flask, Flask-CORS, Flask-Login, Passlib, SMTP, JavaScript, Vue.js, Vue Router, Vuex, Axios, HTML, AWS EC2, nginx, DNS Records, Certbot (Let's Encrypt).
 
 The backend project was created together with [kath-leen](https://github.com/kath-leen).
 
