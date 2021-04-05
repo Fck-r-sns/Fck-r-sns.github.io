@@ -4,7 +4,7 @@ title: "How to solve the Secret Santa Problem using graph theory"
 page_title: "How to solve the Secret Santa Problem using graph theory"
 title_image: "/assets/img/2021-02-03-secret-santa-graph/title_image.png"
 image:
-    path: "/assets/img/2021-02-03-secret-santa-graph/title_image_small.png"
+    path: "/assets/img/2021-02-03-secret-santa-graph/title_image.png"
 date: 2021-02-03 16:00:00 +0300
 images_folder: "/assets/img/2021-02-03-secret-santa-graph"
 excerpt: "Let's talk about graphs, Hamiltonian cycles, NP-problems and backtracking search."
