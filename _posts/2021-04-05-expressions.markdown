@@ -192,7 +192,7 @@ If the new operator's priority is higher or the same, it must be placed lower in
 
 To understand why we insert it as a parent for the last child, we need to remember that we parse infix notation, and we have already read the first operand for this operator. E.g., let's take a look at the expression: `a + b * c`. The algorithm reads `b` before `*`. It thinks it's the second operand for `+` and inserts it as a child for `+`. Then it reads `*` and realizes that `b` must be multiplied before summing, and therefore it moves `b` to the children of `*`.
 
-Then we change the current node to the inserted one because we are reading its operands now.
+Then we assign the inserted node to the current node pointer because we are reading its operands now.
 
 ![]({{page.images_folder}}/5.png)
 
@@ -200,7 +200,7 @@ If the new operator's priority is lower, we need to insert it higher in the tree
 
 The root node has the lowest priority, and it guarantees that this upward search will stop before it if there are no other nodes with lower priority.
 
-Then we change the current node to the inserted one because we are reading its operands now.
+Then we assign the inserted node to the current node pointer because we are reading its operands now.
 
 ![]({{page.images_folder}}/6.png)
 
@@ -216,7 +216,7 @@ max(a + b, c - d)
 
 In this example, we can be sure that `a + b` and `c - d` will be executed before `max(...)`.
 
-It means we don't need to use the priority sorting for functions. We only need to add the function node as a child node to the current node and then set the current node to it.
+It means we don't need to use the priority sorting for functions. We only need to add the function node as a child node to the current node and then assign it to the current node pointer.
 
 ![]({{page.images_folder}}/7.png)
 
@@ -226,13 +226,13 @@ Parentheses mean that everything inside them must be executed before the current
 
 I use a small hack: I insert a temporary "subtree_root" node with low priority to deal with parentheses. That means that if there will be priority sorting for operators in this subtree, then no node can go outside it because no operator can have priority less than "subtree_root".
 
-But before it, we need to push the current node to a stack. The current node will be changed during the subtree parsing, and we will need to return to it after we finish parsing the parentheses. Also, the stack guarantees the correct order for nested parentheses.
+But before it, we need to push the current node to a stack. The current node pointer will be changed during the subtree parsing, and we will need to return to it after we finish parsing the parentheses. Also, the stack guarantees the correct order for nested parentheses.
 
 ![]({{page.images_folder}}/8.png)
 
 ### Right parenthesis
 
-A right parenthesis means that the high priority section has ended. We pop a node from the stack and set the current node to it. We don't need the "subtree_root" node anymore, so we can delete it and move all its children to the current node.
+A right parenthesis means that the high priority section has ended. We pop a node from the stack and assign it to the current node pointer. We don't need the "subtree_root" node anymore, so we can delete it and move all its children to the current node.
 
 ![]({{page.images_folder}}/9.png)
 
@@ -240,7 +240,7 @@ A right parenthesis means that the high priority section has ended. We pop a nod
 
 Argument delimiters (commas in most cases) split operands for functions (e.g., `max(a, b)`) and sometimes for operators (e.g., `a in (b, c)`). They are always used together with parentheses. It means that if we find a comma in an expression, we can assume that we are inside the parentheses block, and therefore there is a "subtree_root" node in the tree.
 
-When we handle subtree operators, the current node can point to an operator in this subtree. When we get the next token after a comma, it is added to the current node, e.g., multiplication. It is wrong because that token must be added to the subtree_root. We need to go up in the tree until we find the nearest "subtree_root" node and set the current node to it.
+When we handle subtree operators, the current node can point to an operator in this subtree. When we get the next token after a comma, it is added to the current node, e.g., multiplication. It is wrong because that token must be added to the subtree_root. We need to go up in the tree until we find the nearest "subtree_root" node and assign it to the current node pointer.
 
 ![]({{page.images_folder}}/10.png)
 
