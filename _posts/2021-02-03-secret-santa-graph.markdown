@@ -7,9 +7,9 @@ image:
     path: "/assets/img/2021-02-03-secret-santa-graph/title_image.png"
 date: 2021-02-03 16:00:00 +0300
 images_folder: "/assets/img/2021-02-03-secret-santa-graph"
-excerpt: "Let's talk about graphs, Hamiltonian cycles, NP-problems and backtracking search."
+excerpt: "Let's talk about graphs, Hamiltonian cycles, NP-problems, and backtracking search."
 ---
-Let's talk about graphs, Hamiltonian cycles, NP-problems and backtracking search.
+Let's talk about graphs, Hamiltonian cycles, NP-problems, and backtracking search.
 
 ![]({{page.images_folder}}/title_image.png)
 
