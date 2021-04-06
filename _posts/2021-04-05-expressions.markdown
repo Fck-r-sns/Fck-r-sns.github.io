@@ -31,7 +31,7 @@ Second, infix notation isn't the best notation if we want to teach a computer to
 
 [Prefix notation](https://en.wikipedia.org/wiki/Polish_notation), also known as Polish notation or normal Polish notation, is when we put the operator before its operands. `1 + 2` becomes `+ 1 2`. `A or B` becomes `or A B`. Humans haven't got used to it, so it might look a bit strange or difficult. It gets even worse if we have expressions with multiple operators, e.g., `A and B or C` becomes `or and A B C`.
 
-The basic idea is that we read a token from the expression one by one. If it's an operator, then we continue reading until we have enough operands for it and execute it. If we find another operator instead of a literal or a variable name, we need to calculate it first, and its result will be the operand for the previous operator.
+The basic idea is that we read tokens from the expression one by one. If it's an operator, then we continue reading until we have enough operands for it and execute it. If we find another operator instead of a literal or a variable name, we need to calculate it first, and its result will be the operand for the previous operator.
 
 With prefix notation, we don't need to think about priorities anymore because the order of execution is written in the expression itself. `A + B * C` turns into `+ A * B C`, which means we need to sum A and the result of multiplication of B and C. `(A + B) * C` turns into `* + A B C`, which means we need to multiply C and the sum of A and B.
 
@@ -56,31 +56,31 @@ When we execute an expression in postfix notation, we read tokens one by one. If
 
 Postfix notation is perfect for stack-based execution. When I wrote that we "keep operands in memory", I didn't mention how exactly we do it. Here comes the stack.
 
-Let's calculate an expression: `9 - 2 * 3`. In postfix notation it is `9 2 3 * -`. We read tokens one by one. First, we get `1`. It's an operand, so we put it on the stack.
+Let's calculate an expression: `9 - 2 * 3`. In postfix notation it is `9 2 3 * -`. We read tokens one by one. First, we get `9`. It's an operand, so we push it to the stack.
 
 ```c
 | 9
 ```
 
-Next, we read `2`. We put it on the stack.
+Next, we read `2`. We push it to the stack.
 
 ```c
 | 9 2
 ```
 
-Next, we read `3`. We put it on the stack.
+Next, we read `3`. We push it to the stack.
 
 ```c
 | 9 2 3
 ```
 
-Now we have `*`. It's a binary operator, so we need to get two operands for it. Let's get the two last operands from the stack. We have `2` and `3`. If we multiply them, we get `6`. We need to put the result on the stack.
+Now we have `*`. It's a binary operator, so we need to get two operands for it. We pop the last two operands from the stack. We have `2` and `3`. If we multiply them, we get `6`. We need to push the result to the stack.
 
 ```c
 | 9 6
 ```
 
-Next, we read `-`. It's a binary operator, and we need to get two operands from the stack. We have `9` and `6` for it. The result is `3`. We put it back on the stack.
+Next, we read `-`. It's a binary operator, and we need to pop two operands from the stack. We have `9` and `6` for it. The result is `3`. We push it back to the stack.
 
 ```c
 | 3
@@ -131,7 +131,7 @@ in 4 max 2 a b c d e
 in 3 max 3 a b c d e
 ```
 
-I like this solution more, but it still feels wrong. Like we lose elegance for Polish notation.
+I like this solution more, but it still feels wrong. Like we lose elegance of Polish notation.
 
 ### Use non-linear data structures
 
@@ -141,11 +141,11 @@ Instead of using linear notation as we got used to with infix notation, we can g
 
 ![]({{page.images_folder}}/2.png)
 
-It's much clear now where operands for `max` are and where operands for `in` are. Let's take a look at another example: `(a + b) * (c - d)`.
+It's much more clear now where operands for `max` are and where operands for `in` are. Let's take a look at another example: `(a + b) * (c - d)`.
 
 ![]({{page.images_folder}}/3.png)
 
-Let's do a depth-first traversal of this graph and print visited tokens. We will get this result:
+Let's do a [depth-first traversal](https://en.wikipedia.org/wiki/Depth-first_search) of this graph and print visited tokens. We will get this result:
 
 ```c
 * + a b - c d
@@ -198,7 +198,7 @@ Then we assign the inserted node to the current node pointer because we are read
 
 If the new operator's priority is lower, we need to insert it higher in the tree than the current node. We go up in the tree until we find a node with a priority lower or equal to the new token's priority. We need to do it because the current node is actually an operand for the new node, so the new node becomes the parent node for the current node.
 
-The root node has the lowest priority, and it guarantees that this upward search will stop before it if there are no other nodes with lower priority.
+The root node has the lowest priority, and it guarantees that this upward search will stop if there are no other nodes with lower priority.
 
 Then we assign the inserted node to the current node pointer because we are reading its operands now.
 
@@ -226,7 +226,7 @@ Parentheses mean that everything inside them must be executed before the current
 
 I use a small hack: I insert a temporary "subtree_root" node with low priority to deal with parentheses. That means that if there will be priority sorting for operators in this subtree, then no node can go outside it because no operator can have priority less than "subtree_root".
 
-But before it, we need to push the current node to a stack. The current node pointer will be changed during the subtree parsing, and we will need to return to it after we finish parsing the parentheses. Also, the stack guarantees the correct order for nested parentheses.
+But before it, we need to push the current node to a stack. The current node pointer might be changed during the subtree parsing, and we will need to return to it after we finish parsing the parentheses. Also, the stack guarantees the correct order for nested parentheses.
 
 ![]({{page.images_folder}}/8.png)
 
@@ -240,7 +240,7 @@ A right parenthesis means that the high priority section has ended. We pop a nod
 
 Argument delimiters (commas in most cases) split operands for functions (e.g., `max(a, b)`) and sometimes for operators (e.g., `a in (b, c)`). They are always used together with parentheses. It means that if we find a comma in an expression, we can assume that we are inside the parentheses block, and therefore there is a "subtree_root" node in the tree.
 
-When we handle subtree operators, the current node can point to an operator in this subtree. When we get the next token after a comma, it is added to the current node, e.g., multiplication. It is wrong because that token must be added to the subtree_root. We need to go up in the tree until we find the nearest "subtree_root" node and assign it to the current node pointer.
+When we handle subtree operators, the current node can point to an operator in this subtree. When we get the next token after a comma, that token must be added to the subtree_root. We need to go up in the tree until we find the nearest "subtree_root" node and assign it to the current node pointer.
 
 ![]({{page.images_folder}}/10.png)
 
