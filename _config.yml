@@ -24,7 +24,8 @@ description: A personal website / portfolio / blog about game development
 
 social:
     github: https://github.com/binary-machinery
-    linkedin: https://www.linkedin.com/in/evgeniyprikhodko/
+    linkedin: https://www.linkedin.com/in/evgeniyprikhodko
+    medium: https://medium.com/@binary-machinery
     email: binary.machinery@gmail.com
 
 jekyll_url: https://github.com/jekyll/jekyll
